@@ -1,9 +1,22 @@
 services:
   postgres:
-    image: 'postgres:latest'
+    image: 'postgres:14.7-alpine'
     environment:
       - 'POSTGRES_DB=task_management_system'
       - 'POSTGRES_PASSWORD=1234'
       - 'POSTGRES_USER=user'
     ports:
-      - '5432'
+      - '5432:5432'
+
+  spring-backend:
+    image: "spring-backend:1.0.0"
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+    environment:
+      - SERVER_PORT=8080
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres/task_management_system
